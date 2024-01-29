@@ -1,6 +1,5 @@
 
 #include "verilated.h"
-#include "Vbranch_predictor.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -26,7 +25,7 @@ uint32_t random_int() {
     static std::mt19937 gen32;
     return gen32();
 }
-
+/*
 void reset_bp(Vbranch_predictor& bp) {
     bp.reset = true;
     bp.clk = 0;
@@ -74,11 +73,12 @@ void test_bp(ModelPtr& bp_ptr) {
             save_vmodel("./temp.vm", std::move(bp));
         }
     }
-}
+}*/
 
 int main(int argc, char** argv) {
+    /*
     Verilated::commandArgs(argc, argv);
     std::cout << "Starting branch predictor" << std::endl;
     ModelPtr bp = std::make_unique<Vbranch_predictor>();
-    test_bp(bp);
+    test_bp(bp);*/
 }

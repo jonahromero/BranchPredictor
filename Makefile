@@ -1,6 +1,7 @@
 
-SOURCES = branch_predictor.sv branch_predictor_tb.cpp
-VERILATOR_FLAGS = -cc --exe --build -j --top-module branch_predictor --savable $(SOURCES)
+SOURCES = prediction_intf.sv prediction_history.sv branch_predictor_tb.cpp tournament_predictor.sv \
+			 predictor.sv history.sv
+VERILATOR_FLAGS = -cc --exe --build -j --top-module tournament_predictor --savable $(SOURCES)
 
 ifeq ($(WALL), 1)
 	VERILATOR_FLAGS := -Wall $(VERILATOR_FLAGS)
@@ -14,8 +15,8 @@ all: bp
 
 bp:
 	@verilator $(VERILATOR_FLAGS)
-	@mv ./obj_dir/Vbranch_predictor branch_predictor
+	@mv ./obj_dir/tournament_predictor tournament_predictor
 
 clean:
 	rm -r ./obj_dir
-	rm ./branch_predictor
+	rm ./tournament_predictor

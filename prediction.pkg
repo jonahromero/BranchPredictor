@@ -1,0 +1,29 @@
+`ifndef BP_PREDICTION_PKG
+`define BP_PREDICTION_PKG
+
+package pred_pkg;
+    parameter INDEX_LEN = 14;
+    parameter GLOBAL_HIST_LEN = 12;
+    parameter LOCAL_HIST_LEN = 12;
+    parameter MAX_ROLLBACK_CYCLES_INCL = 10;
+
+    typedef struct packed {
+        logic enable;
+        logic is_rollback;
+        logic[$clog2(MAX_ROLLBACK_CYCLES_INCL+1)-1:0] no_stall_rollback_cycles;
+        logic[INDEX_LEN-1:0] index;
+        logic taken;
+    } update_t;
+
+    typedef struct packed {
+        logic[INDEX_LEN-1:0] index;
+    } query_t;
+
+    typedef struct packed {
+        logic take;
+    } response_t;
+endpackage
+
+import pred_pkg::*;
+
+`endif
