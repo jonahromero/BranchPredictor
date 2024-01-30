@@ -1,29 +1,39 @@
 `ifndef BP_PREDICTION_PKG
 `define BP_PREDICTION_PKG
 
-package pred_pkg;
-    parameter INDEX_LEN = 14;
-    parameter GLOBAL_HIST_LEN = 12;
-    parameter LOCAL_HIST_LEN = 12;
-    parameter MAX_ROLLBACK_CYCLES_INCL = 10;
+`define MAX2(a, b) (a > b ? a : b)
+`define MAX3(a, b, c) (MAX2(MAX2(a,b),c))
 
-    typedef struct packed {
-        logic enable;
-        logic is_rollback;
-        logic[$clog2(MAX_ROLLBACK_CYCLES_INCL+1)-1:0] no_stall_rollback_cycles;
-        logic[INDEX_LEN-1:0] index;
-        logic taken;
-    } update_t;
+// index length of pc that is being supplied
+parameter INDEX_LEN = 14;
+parameter GLOBAL_HIST_LEN = 12;
+parameter LOCAL_HIST_LEN = 12;
+parameter MAX_ROLLBACK_CYCLES_INCL = 10;
 
-    typedef struct packed {
-        logic[INDEX_LEN-1:0] index;
-    } query_t;
+`define update_t(INDEX_LEN) \
+struct packed { \
+    logic enable; \
+    logic is_rollback; \
+    logic[$clog2(MAX_ROLLBACK_CYCLES_INCL+1)-1:0] no_stall_rollback_cycles; \
+    logic[INDEX_LEN-1:0] index; \
+    logic taken; \
+}
 
-    typedef struct packed {
-        logic take;
-    } response_t;
-endpackage
+`define query_t(INDEX_LEN) \
+struct packed { \
+    logic[INDEX_LEN-1:0] index; \
+}
 
-import pred_pkg::*;
+typedef struct packed {
+    logic take;
+} response_t;
+
+typedef struct packed {
+    logic[INDEX_LEN-1:0] index;
+    logic[LOCAL_HIST_LEN-1:0] local_hist;
+    logic[GLOBAL_HIST_LEN-1:0] global_hist;
+    logic had_guessed_global;
+    logic guesses_were_same;
+} history_entry_t;
 
 `endif

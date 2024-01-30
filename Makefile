@@ -15,7 +15,7 @@ all: bp
 
 bp:
 	@verilator $(VERILATOR_FLAGS)
-	@mv ./obj_dir/tournament_predictor tournament_predictor
+	@mv ./obj_dir/Vtournament_predictor tournament_predictor
 
 clean:
 	rm -r ./obj_dir

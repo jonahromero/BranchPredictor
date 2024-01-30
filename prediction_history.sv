@@ -1,47 +1,30 @@
 
 `include "prediction.pkg"
 
+// A queue to store past prediction requests
 module prediction_history #(LENGTH)(
     input logic reset, clk, is_stalling,
-    input logic[INDEX_LEN-1:0] current_index,
-    input logic local_equal_global,
-    input logic guess_global,
-
+    input history_entry_t current_history,
     input logic[INDEX_LEN-1:0] query_index,
-    output logic had_guessed_global,
-    output logic were_equal
+    output history_entry_t query_history
 );
-    typedef struct packed {
-        logic[INDEX_LEN-1:0] index;
-        logic local_equal_global;
-        logic had_guessed_global;
-    } element_t;
-    element_t[LENGTH-1:0] queue;
-
-    genvar i;
-    generate
-        // we want to pick the value closest to the end of queue
-        for (i = 0; i < LENGTH-1; i++) begin
-            always_comb begin
-                if (query_index == queue[i].index) begin
-                    were_equal = queue[i].local_equal_global;
-                    had_guessed_global = queue[i].had_guessed_global;
-                end
+    history_entry_t[LENGTH-1:0] queue;
+    always_comb begin
+        query_history = 0; // Default value if not found
+        for (int i = 0; i < LENGTH; i++) begin
+            if (query_index == queue[i].index) begin
+                query_history = queue[i];
             end
         end
-    endgenerate
+    end
 
     always_ff @ (posedge clk, negedge reset) begin
         if (!reset) begin
             queue = '{default:0};
         end
         else if(!is_stalling) begin
-            queue <= (queue << $bits(element_t));
-            queue[0] <= '{
-                index:current_index,
-                local_equal_global:local_equal_global,
-                had_guessed_global:had_guessed_global
-            };
+            queue <= (queue << $bits(history_entry_t));
+            queue[0] <= current_history;
         end
     end
 endmodule

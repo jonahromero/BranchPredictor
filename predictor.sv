@@ -1,6 +1,6 @@
 
 
-// General module for predicting
+// General module for predicting based on 2-bit saturation
 module predictor #(INDEX_LEN)(
     prediction_intf.data_in bus
 );

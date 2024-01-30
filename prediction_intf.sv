@@ -1,9 +1,9 @@
 
 `include "prediction.pkg"
 
-interface prediction_intf(input logic reset, clk);
-    query_t query;
-    update_t update;
+interface prediction_intf#(INDEX_LEN)(input logic reset, clk);
+    `query_t(INDEX_LEN) query;
+    `update_t(INDEX_LEN) update;
     response_t response;
     logic is_stalling;
 
